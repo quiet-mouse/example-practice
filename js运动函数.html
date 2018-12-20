@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        #box{
+            width: 100px;
+            height: 100px;
+            top: 30px;
+            background: skyblue;
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+    <div id="box"></div>
+    <script>
+        var oBox = document.getElementById("box");
+        startMove(oBox, {left:500}, function(){
+            oBox.style.background = 'hotpink';
+            startMove(oBox, {top:500, width: 400, height: 400}, function(){
+                oBox.style.background = 'pink';
+                startMove(oBox, {top:30, left: 50, width: 150, height: 150}, function(){
+                    oBox.style.background = 'skyblue';
+                })
+            })
+        });
+　　　　
+　　　　
+// 缓冲运动函数
+function getStyle(obj, attr) {
+    return obj.currentStyle ? obj.currentStyle[attr] : getComputedStyle(obj, null)[attr];
+}　　　　
+function startMove(obj, json, fn) {　　　　　　　
+    //清除定时器,避免多次调用造成定时器执行混乱 
+    clearInterval(obj.timer);
+    obj.timer = setInterval(function() {
+        var done = true;
+        for (attr in json) {
+            var icur = 0;　　　　　　　　　　　　
+            //attr如果是opacity, 考虑IE的兼容写法 
+            icur = (attr == 'opacity') ? Math.round(getStyle(obj, attr) * 100) : parseInt(getStyle(obj, attr));　　　　　　　　　　　　
+            //iSpeed是一个增长变量,除数可看情况更改 
+            var iSpeed = (json[attr] - icur) / 50;　　　　　　　　　　　　
+            //不明白iSpeed为什么要 大于0向上取整,小于0向下取整, 可能是不让iSpeed等于0 
+            iSpeed = iSpeed > 0 ? Math.ceil(iSpeed) : Math.floor(iSpeed);　　　　　　　　　　　　
+            //改变样式 
+            if (icur != json[attr]) {
+                done = false;
+                if (attr == 'opacity') {
+                    obj.style.filter = "alpha(opacity:" + (icur + iSpeed) + ")";
+                    obj.style.opacity = (icur + iSpeed) / 100;
+                } else {
+                    obj.style[attr] = icur + iSpeed + 'px';
+                }
+            }　　　　　　　　　　　　
+        }
+        if (done) {
+            clearInterval(obj.timer);
+            fn && fn();
+        }
+    }, 10)
+}
+
+
+
+
+    </script>
+</body>
+</html>
