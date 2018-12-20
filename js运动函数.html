@@ -18,20 +18,24 @@
     </style>
 </head>
 <body>
-    <button id="start" style="position:absolute; right:10">开始</button>
+    <button id="start" style="position:absolute;">开始</button>
     <div id="box"></div>
     <script>
         var oBox = document.getElementById("box");
-        document.getElementById("start").onclick = function(){
+        var btn = document.getElementById("start")
+        btn.onclick = function(){
+            btn.disabled = true;
             startMove(oBox, {left:500}, function(){
                 oBox.style.background = 'hotpink';
                 startMove(oBox, {top:500, width: 400, height: 400}, function(){
                     oBox.style.background = 'pink';
                     startMove(oBox, {top:30, left: 50, width: 150, height: 150}, function(){
                         oBox.style.background = 'skyblue';
+                        btn.disabled = false;
                     })
                 })
             });
+            
         }
 　　　　
 　　　　
