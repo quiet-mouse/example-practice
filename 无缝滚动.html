@@ -94,7 +94,7 @@
         //获取class
         function $$$(className, oParent) {
             var aClass = [];
-            var reClass = new RegExp("(//s|^)" + className + "($|//s)");
+            var reClass = new RegExp("(\\s|^)" + className + "($|\\s)");
             var aElem = $$("*", oParent);
             for (var i = 0; i < aElem.length; i++)
                 reClass.test(aElem[i].className) && aClass.push(aElem[i]);
